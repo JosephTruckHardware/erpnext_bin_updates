@@ -13,11 +13,6 @@ def update_bin_qty(item_code, warehouse, qty_dict=None):
     if mismatch:
         # bin.modified = now()
         bin.set_projected_qty()
-        # bin.set_status(update=True)
-        # Persist without running full save (avoids the "modified" race)
-        # bin.db_update()
-        # Trigger webhooks / realtime listeners for this doc
-
         bin.save()
         bin.notify_update()
         bin.clear_cache()
