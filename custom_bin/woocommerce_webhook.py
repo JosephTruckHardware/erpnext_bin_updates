@@ -10,25 +10,55 @@ BASE_URL = "https://www.wildernessvans.com/wp-json/wc/v3"
 def update_product_stock(**kwargs):
     """
     Webhook endpoint to update WooCommerce stock by SKU.
-    Expects JSON payload: {"item_code": "SKU123", "actual_qty": 10}
+    Expects JSON payload: {"item_code": "SKU123", "warehouse": "Stores - WV"}
     """
     try:
         sku = kwargs.get("item_code")
-        stock_level = int(kwargs.get("actual_qty"))
+        warehouse = kwargs.get("warehouse")
 
-        if not sku or stock_level is None:
-            frappe.throw("Missing item_code or actual_qty in webhook payload.")
+        if not sku or not warehouse:
+            frappe.throw("Missing item_code or warehouse in webhook payload.")
+
+        # Get current stock level from ERPNext
+        stock_level = get_stock_level(sku, warehouse)
+        
+        if stock_level is None:
+            return {"status": "error", "message": f"Could not fetch stock level for {sku} in {warehouse}"}
 
         product_url = get_item_url(sku)
         if not product_url:
             return {"status": "error", "message": f"Product with SKU {sku} not found"}
 
         update_stock_level(product_url, stock_level)
-        return {"status": "success", "sku": sku, "stock_level": stock_level}
+        return {"status": "success", "sku": sku, "warehouse": warehouse, "stock_level": stock_level}
 
     except Exception as e:
         frappe.log_error(title="WooCommerce Webhook Error", message=str(e))
         return {"status": "error", "message": str(e)}
+
+
+def get_stock_level(item_code, warehouse):
+    """Fetch current stock level from ERPNext Bin"""
+    try:
+        bin_data = frappe.db.get_value(
+            "Bin",
+            {"item_code": item_code, "warehouse": warehouse},
+            ["actual_qty"],
+            as_dict=True
+        )
+        
+        if bin_data:
+            return int(bin_data.actual_qty)
+        else:
+            frappe.log_error(
+                title="Stock Fetch Error", 
+                message=f"No bin found for item {item_code} in warehouse {warehouse}"
+            )
+            return 0  # Return 0 if no bin exists
+            
+    except Exception as e:
+        frappe.log_error(title="Stock Level Fetch Error", message=str(e))
+        return None
 
 
 def get_item_url(sku):
