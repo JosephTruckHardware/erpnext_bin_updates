@@ -249,3 +249,10 @@ import erpnext.stock.stock_balance
 import custom_bin.overrides.custom_bin
 
 erpnext.stock.stock_balance.update_bin_qty = custom_bin.overrides.custom_bin.update_bin_qty
+
+doc_events = {
+    "Stock Ledger Entry": {
+        "after_insert": "custom_bin.stock_events.trigger_bin_webhook",
+        "on_cancel": "custom_bin.stock_events.trigger_bin_webhook"
+    }
+}
