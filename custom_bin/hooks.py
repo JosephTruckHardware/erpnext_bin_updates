@@ -258,6 +258,6 @@ doc_events = {
 }
 
 override_doctype_class = {
-    "Sales Invoice": "historical_imports.overrides.sales_invoice.SalesInvoice",
-    "Purchase Invoice": "historical_imports.overrides.purchase_invoice.PurchaseInvoice",
+    "Sales Invoice": "custom_bin.overrides.sales_invoice.SalesInvoice",
+    "Purchase Invoice": "custom_bin.overrides.purchase_invoice.PurchaseInvoice",
 }
