@@ -258,6 +258,8 @@ doc_events = {
 }
 
 override_doctype_class = {
+    "Delivery Note": "custom_bin.overrides.delivery_note.DeliveryNote",
     "Sales Invoice": "custom_bin.overrides.sales_invoice.SalesInvoice",
     "Purchase Invoice": "custom_bin.overrides.purchase_invoice.PurchaseInvoice",
+    "Purchase Receipt": "custom_bin.overrides.purchase_receipt.PurchaseReceipt"
 }
