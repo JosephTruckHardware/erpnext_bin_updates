@@ -256,3 +256,8 @@ doc_events = {
         "on_cancel": "custom_bin.stock_events.trigger_bin_webhook"
     }
 }
+
+override_doctype_class = {
+    "Sales Invoice": "historical_imports.overrides.sales_invoice.SalesInvoice",
+    "Purchase Invoice": "historical_imports.overrides.purchase_invoice.PurchaseInvoice",
+}
