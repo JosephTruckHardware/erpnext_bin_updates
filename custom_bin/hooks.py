@@ -254,6 +254,9 @@ doc_events = {
     "Stock Ledger Entry": {
         "after_insert": "custom_bin.stock_events.trigger_bin_webhook",
         "on_cancel": "custom_bin.stock_events.trigger_bin_webhook"
+    },
+    "Customer": {
+        "autoname": "custom_bin.events.customer_autoname"
     }
 }
 
