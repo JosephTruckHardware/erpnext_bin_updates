@@ -17,8 +17,8 @@ def customer_autoname(doc, method):
     #     return
 
     # If custom_spire_id already exists, use it
-    if doc.custom_spire_id:
-        desired = doc.custom_spire_id
+    if doc.custom_customer_id:
+        desired = doc.custom_customer_id
     else:
         fullname = (doc.customer_name or "").strip()
         parts = fullname.split()
@@ -43,7 +43,7 @@ def customer_autoname(doc, method):
             i += 1
         desired = candidate
 
-        doc.custom_spire_id = desired
+        doc.custom_customer_id = desired
         
     frappe.log_error(f"Generated ID: {desired}", "Customer Autoname")
 
